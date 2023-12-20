@@ -1,7 +1,6 @@
 const fastify = require("fastify")({ logger: true });
 const cors = require("@fastify/cors");
 const mongoose = require("mongoose");
-const fastifyRedis = require('@fastify/redis')
 
 
 require("dotenv").config();
@@ -10,7 +9,7 @@ fastify.register(cors, {
 });
 
 mongoose.set("strictQuery", false);
-// //Refaire la connection avec mongoose
+//Refaire la connection avec mongoose
 mongoose.connect(
   `mongodb://${process.env.MONGODB_URL}/${process.env.MONGODB_NAME}`
 ).then(() => {
@@ -33,7 +32,13 @@ fastify.get("/", function (request, reply) {
 fastify.get("/getProducts", async function (request, reply) {
   try {
     //recupérer la fouchette de prix dans les paramètres de la requête
-    const { min, max } = request.query;
+
+    let { min, max } = request.query;
+
+    if (!min || !max) {
+      min = 0;
+      max = 1000000;
+    }
 
     const randomProducts = [];
     const result = await fastify.redis.get("products");
@@ -69,6 +74,12 @@ fastify.get("/getProducts", async function (request, reply) {
     console.log(error);
   }
 });
+
+// route pour récupérer les statistiques via le controller filter
+
+
+
+
 
 
 // Run the server!
