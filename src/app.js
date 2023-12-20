@@ -17,7 +17,7 @@ mongoose.connect(
 }).catch(err => console.log(err))
 
 fastify.register(require('@fastify/redis'), {
-  host: '127.0.0.1',
+  host: '0.0.0.0',
   password: 'root',
   port: 6379, // Redis port
 })
