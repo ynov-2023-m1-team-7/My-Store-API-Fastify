@@ -15,7 +15,7 @@ mongoose.connect(
   `${process.env.MONGODB_URL}`,
 );
 
-fastify.register(require("@fastify/redis"), {
+fastify.register(require('@fastify/redis'), {
   host: '172.21.0.1',
   password: 'root',
   port: 6379, // Redis port
