@@ -37,3 +37,14 @@ exports.getStats = (async function (request, reply) {
         console.log(error);
     }
 })
+
+// route pour stocker les filtres dans mongodb
+exports.storeFilter = (async function (request, reply) {
+    try {
+        const filter = new Filter(request.body);
+        await filter.save();
+        reply.send(filter);
+    } catch (error) {
+        console.log(error);
+    }
+})
