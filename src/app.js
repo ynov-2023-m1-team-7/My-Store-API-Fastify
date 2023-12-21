@@ -10,10 +10,12 @@ fastify.register(cors, {
 });
 
 mongoose.set("strictQuery", false);
-//Refaire la connection avec mongoose
+
 mongoose.connect(
-  `${process.env.MONGODB_URL}`,
-);
+  `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}${process.env.MONGO_DB_DB}/?retryWrites=true&w=majority`,
+).then(() => {
+  console.log("successfully connect to database mongodb")
+}).catch(err => console.log(err))
 
 fastify.register(require('@fastify/redis'), {
   host: '172.21.0.1',
