@@ -18,7 +18,7 @@ mongoose.connect(
 fastify.register(require('@fastify/redis'), {
   host: '172.21.0.1',
   password: 'root',
-  port: 6379, // Redis port
+  port: 6379,
 });
 
 //Routes mongoDB
@@ -34,18 +34,18 @@ fastify.get("/getProducts", async function (request, reply) {
   try {
     //recupérer la fouchette de prix dans les paramètres de la requête
 
-    let { min, max } = request.query;
+    let { minPrice, maxPrice } = request.query;
 
-    if (!min || !max) {
-      min = 0;
-      max = 1000000;
+    if (!minPrice || !maxPrice) {
+      minPrice = 0;
+      maxPrice = 1000000;
     }
 
     const randomProducts = [];
     const result = await fastify.redis.get("products");
     const products = JSON.parse(result);
     const filteredProducts = products.filter(
-      (product) => product.price >= min && product.price <= max
+      (product) => product.price >= minPrice && product.price <= maxPrice
     );
     // si il n'y a pas assez de produits dans la fourchette de prix, on renvoit 3 produits aléatoires
     while (filteredProducts.length < 3) {
@@ -78,21 +78,22 @@ fastify.get("/getAllProducts", async function (request, reply) {
   try {
     //recupérer la fouchette de prix dans les paramètres de la requête
 
-    let { min, max } = request.query;
+    let { minPrice, maxPrice } = request.query;
+    console.log(minPrice, maxPrice);
 
-    if (!min || !max) {
-      min = 0;
-      max = 1000000;
+    if (!minPrice || !maxPrice) {
+      minPrice = 0;
+      maxPrice = 1000000;
     }
 
     const result = await fastify.redis.get("products");
     const products = JSON.parse(result);
     const filteredProducts = products.filter(
-      (product) => product.price >= min && product.price <= max
+      (product) => product.price >= minPrice && product.price <= maxPrice
     );
     const newFilteredProducts = {
-      minPrice: min,
-      maxPrice: max,
+      minPrice: minPrice,
+      maxPrice: maxPrice,
     }
     const filter = new Filter(newFilteredProducts);
     await filter.save();
